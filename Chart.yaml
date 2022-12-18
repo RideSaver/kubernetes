@@ -1,0 +1,69 @@
+apiVersion: v2
+name: RideSaver
+description: The Helm Chart to install RideSaver
+
+# A chart can be either an 'application' or a 'library' chart.
+#
+# Application charts are a collection of templates that can be packaged into versioned archives
+# to be deployed.
+#
+# Library charts provide useful utilities or functions for the chart developer. They're included as
+# a dependency of application charts to inject those utilities and functions into the rendering
+# pipeline. Library charts do not define any templates and therefore cannot be deployed.
+type: application
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+# Versions are expected to follow Semantic Versioning (https://semver.org/)
+version: 0.0.1
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application. Versions are not expected to
+# follow Semantic Versioning. They should reflect the version the application is using.
+# It is recommended to use it with quotes.
+appVersion: "0.0.1"
+
+dependencies:
+  - name: RideSaver_API_Server
+    repository: https://github.com/RideSaver/RideSaver_API_Server
+    version: ~0.0.1
+  - name: RideSaver_Uber_Client
+    repository: https://github.com/RideSaver/UberAPI_Client
+    version: ~0.0.1
+    tags:
+      - client
+      - uber
+  - name: RideSaver_Lyft_Client
+    repository: https://github.com/RideSaver/LyftAPI_Client
+    version: ~0.0.1
+    tags:
+      - client
+      - lyft
+  - name: RideSaver_Uber_Mock
+    repository: https://github.com/RideSaver/MockAPI_Uber
+    version: ~0.0.1
+    tags:
+      - mock
+      - uber
+  - name: RideSaver_Lyft_Mock
+    repository: https://github.com/RideSaver/MockAPI_Lyft
+    version: ~0.0.1
+    tags:
+      - mock
+      - lyft
+
+  - name: vault
+    repository: https://helm.releases.hashicorp.com
+    version: ~0.23.0
+    tags:
+      - security
+  - name: cert-manager
+    repository: https://charts.jetstack.io
+    version: ~v1.10.1
+    tags:
+      - security
+
+  - name: nginx-stable/nginx-ingress
+    repository: https://helm.nginx.com/stable
+    version: ~0.15.2
+    condition: ingress.enabled
