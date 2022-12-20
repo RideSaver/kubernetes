@@ -1,0 +1,54 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}"
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}"
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: post-install-job
+        image: "hashicorp/vault:latest"
+        command:
+          - /bin/sh
+          - -c
+          - |
+            vault login -method kubernetes jwtToken=$TOKEN
+            vault secrets enable pki
+            vault write pki/root/generate/internal \
+                common_name=$url \
+                ttl=8760h
+
+            vault write pki/config/urls \
+                issuing_certificates="http://vault.default:8200/v1/pki/ca" \
+                crl_distribution_points="http://vault.default:8200/v1/pki/crl"
+
+            vault write pki/roles/ride-saver \
+                allowed_domains={{- import "RideSaver.url" -}},{{- .Release.Namespace -}} \
+                allow_subdomains=true \
+                max_ttl=72h
+        env:
+          - name: VAULT_ADDR
+            value: {{- default "vault" .Values.vault_addr -}}
+          - name: TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "RideSaver.serviceAccountName" . }}
+                key: token
