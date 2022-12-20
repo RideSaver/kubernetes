@@ -24,29 +24,32 @@ version: 0.0.1
 appVersion: "0.0.1"
 
 dependencies:
-  - name: RideSaver_API_Server
-    repository: https://github.com/RideSaver/RideSaver_API_Server
+  - name: RideSaver/UI
+    repository: https://RideSaver.github.com/kubernetes
     version: ~0.0.1
-  - name: RideSaver_Uber_Client
-    repository: https://github.com/RideSaver/UberAPI_Client
+  - name: RideSaver/API_Server
+    repository: https://RideSaver.github.com/kubernetes
+    version: ~0.0.1
+  - name: RideSaver/Client/Uber
+    repository: https://RideSaver.github.com/kubernetes
     version: ~0.0.1
     tags:
       - client
       - uber
-  - name: RideSaver_Lyft_Client
-    repository: https://github.com/RideSaver/LyftAPI_Client
+  - name: RideSaver/Client/Lyft
+    repository: https://RideSaver.github.com/kubernetes
     version: ~0.0.1
     tags:
       - client
       - lyft
-  - name: RideSaver_Uber_Mock
-    repository: https://github.com/RideSaver/MockAPI_Uber
+  - name: RideSaver/Mock/Uber
+    repository: https://RideSaver.github.com/kubernetes
     version: ~0.0.1
     tags:
       - mock
       - uber
-  - name: RideSaver_Lyft_Mock
-    repository: https://github.com/RideSaver/MockAPI_Lyft
+  - name: RideSaver/Mock/Lyft
+    repository: https://RideSaver.github.com/kubernetes
     version: ~0.0.1
     tags:
       - mock
