@@ -28,6 +28,14 @@ jobs:
         with:
           version: v3.10.0
 
+      - name: Update dependencies
+        run: |
+          helm repo add RideSaver https://RideSaver.github.com/kubernetes
+          helm repo add hashicorp https://helm.releases.hashicorp.com
+          helm repo add jetstack https://charts.jetstack.io
+          helm repo add nginx https://helm.nginx.com/stable
+          helm repo update
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.1
         env:
