@@ -22,20 +22,3 @@ version: 0.0.1-1
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
 appVersion: "0.0.1"
-
-dependencies:
-  - name: vault
-    repository: https://helm.releases.hashicorp.com
-    version: ~0.23.0
-    tags:
-      - security
-  - name: cert-manager
-    repository: https://charts.jetstack.io
-    version: ~v1.10.1
-    tags:
-      - security
-
-  - name: nginx-ingress
-    repository: https://helm.nginx.com/stable
-    version: ~0.15.2
-    condition: ingress.enabled

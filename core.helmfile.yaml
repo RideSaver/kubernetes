@@ -1,0 +1,32 @@
+repositories:
+  - name: LyftClient
+    url: https://RideSaver.github.io/LyftAPI_Client
+  - name: UberClient
+    url: https://RideSaver.github.io/UberAPI_Client
+  - name: UberMock
+    url: https://RideSaver.github.io/MockAPI_Uber
+
+  - name: hashicorp
+    url: https://helm.releases.hashicorp.com
+  - name: nginx
+    url: https://kubernetes.github.io/ingress-nginx
+  - name: jetstack
+    url: https://charts.jetstack.io
+
+
+
+releases:
+  - name: vault
+    namespace: core
+    chart: hashicorp/vault
+    disableValidation: true
+  - name: cert-manager
+    namespace: core
+    chart: jetstack/cert-manager
+    disableValidation: true
+    values:
+      - installCRDs: true
+  - name: nginx-ingress
+    namespace: core
+    chart: nginx/ingress-nginx
+    disableValidation: true

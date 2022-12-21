@@ -3,32 +3,46 @@ repositories:
   #   url: https://RideSaver.github.io/UI
   - name: LyftClient
     url: https://RideSaver.github.io/LyftAPI_Client
-  - name: LyftMock
-    url: https://RideSaver.github.io/MockAPI_Lyft
+  # - name: LyftMock
+  #   url: https://RideSaver.github.io/MockAPI_Lyft
   - name: UberClient
     url: https://RideSaver.github.io/UberAPI_Client
-  # - name: UberMock
-  #   url: https://RideSaver.github.io/MockAPI_Uber
+  - name: UberMock
+    url: https://RideSaver.github.io/MockAPI_Uber
+
+  - name: hashicorp
+    url: https://helm.releases.hashicorp.com
+  - name: nginx
+    url: https://helm.nginx.com/stable
+  - name: jetstack
+    url: https://charts.jetstack.io
 
 releases:
+  - name: core
+    namespace: core
+    chart: ./charts/RideSaver_Core
   # - name: UI
   #   namespace: server
   #   chart: UI/RideSaver_UI
-  - name: LyftMock
-    namespace: mock
-    chart: LyftMock/RideSaver_Mock_Lyft
-  - name: LyftClient
-    namespace: client
-    chart: LyftClient/RideSaver_Client_Lyft
-  # - name: UberMock
+  # - name: LyftMock
   #   namespace: mock
-  #   chart: Mock_Uber/RideSaver_Mock_Uber
-  - name: UberClient
+  #   chart: LyftMock/RideSaver_Mock_Lyft
+  # - name: LyftClient
+  #   namespace: client
+  #   chart: LyftClient/RideSaver_Client_Lyft
+  - name: uber-mock
+    namespace: mock
+    chart: UberMock/RideSaver_Mock_Uber
+  - name: uber-client
     namespace: client
     chart: UberClient/RideSaver_Client_Uber
-helmfiles:
-  - path: git::https://github.com/RideSaver/RideSaver_API_Server.git@charts/helmfile.yaml?ref=RideSaver_API_Services-0.1.0
     values:
-      - settings.yaml
+      - fullnameOverride: uber-client
+helmfiles:
+  - path: ./core.helmfile.yaml
+#   - path: git::https://github.com/RideSaver/RideSaver_API_Server.git@charts/helmfile.yaml?ref=v1.0.0
+#     values:
+#       - settings.yaml
+#       - namespace: api
 bases:
   - settings.yaml

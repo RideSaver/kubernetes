@@ -1,7 +1,10 @@
-ingress:
-  enabled: true
-  hosts:
-    - host: ride-saver.online
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
+environments:
+  default:
+    values:
+      - ingress:
+          enabled: true
+          hosts:
+            - host: ride-saver.online
+              paths:
+                - path: /
+                  pathType: ImplementationSpecific
