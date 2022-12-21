@@ -24,37 +24,6 @@ version: 0.0.1-1
 appVersion: "0.0.1"
 
 dependencies:
-  - name: RideSaver/UI
-    repository: https://RideSaver.github.io/kubernetes
-    version: ~0.0.1
-  - name: RideSaver/API_Server
-    repository: https://RideSaver.github.io/kubernetes
-    version: ~0.0.1
-  - name: RideSaver/Client/Uber
-    repository: https://RideSaver.github.io/kubernetes
-    version: ~0.0.1
-    tags:
-      - client
-      - uber
-  - name: RideSaver/Client/Lyft
-    repository: https://RideSaver.github.io/kubernetes
-    version: ~0.0.1
-    tags:
-      - client
-      - lyft
-  - name: RideSaver/Mock/Uber
-    repository: https://RideSaver.github.io/kubernetes
-    version: ~0.0.1
-    tags:
-      - mock
-      - uber
-  - name: RideSaver/Mock/Lyft
-    repository: https://RideSaver.github.io/kubernetes
-    version: ~0.0.1
-    tags:
-      - mock
-      - lyft
-
   - name: vault
     repository: https://helm.releases.hashicorp.com
     version: ~0.23.0
@@ -66,7 +35,7 @@ dependencies:
     tags:
       - security
 
-  - name: nginx-stable/nginx-ingress
+  - name: nginx-ingress
     repository: https://helm.nginx.com/stable
     version: ~0.15.2
     condition: ingress.enabled

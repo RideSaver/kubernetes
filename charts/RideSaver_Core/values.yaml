@@ -1,0 +1,37 @@
+# Default values for RideSaver.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+vault_addr:
+
+replicaCount: 1
+ca:
+  name: ridesaver-ca
+  type: ClusterIssuer
+  from: Vault
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+ingress:
+  enabled: false
+  className: ""
+  annotations:
+    {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: ride-saver.online
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+

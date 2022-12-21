@@ -37,11 +37,11 @@ spec:
                 ttl=8760h
 
             vault write pki/config/urls \
-                issuing_certificates="http://vault.default:8200/v1/pki/ca" \
+                issuing_certificates="http://vault.default:8200/v1/pki/{{- .Release.Name -}}" \
                 crl_distribution_points="http://vault.default:8200/v1/pki/crl"
 
             vault write pki/roles/ride-saver \
-                allowed_domains={{- import "RideSaver.url" -}},{{- .Release.Namespace -}} \
+                allowed_domains={{- include "RideSaver.url" . -}},{{- .Release.Namespace -}} \
                 allow_subdomains=true \
                 max_ttl=72h
         env:

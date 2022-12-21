@@ -1,0 +1,7 @@
+ingress:
+  enabled: true
+  hosts:
+    - host: ride-saver.online
+      paths:
+        - path: /
+          pathType: ImplementationSpecific

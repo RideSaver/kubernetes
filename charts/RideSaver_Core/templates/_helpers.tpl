@@ -62,5 +62,7 @@ Create the name of the service account to use
 {{- end }}
 
 {{- define "RideSaver.url" -}}
-{{- default "ride-saver.online" get (first .Values.ingress.hosts) "host" -}}
+{{ with first .Values.ingress.hosts }}
+{{- default "ride-saver.online" .host -}}
+{{ end }}
 {{- end -}}

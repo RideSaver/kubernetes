@@ -1,0 +1,34 @@
+repositories:
+  # - name: UI
+  #   url: https://RideSaver.github.io/UI
+  - name: LyftClient
+    url: https://RideSaver.github.io/LyftAPI_Client
+  - name: LyftMock
+    url: https://RideSaver.github.io/MockAPI_Lyft
+  - name: UberClient
+    url: https://RideSaver.github.io/UberAPI_Client
+  # - name: UberMock
+  #   url: https://RideSaver.github.io/MockAPI_Uber
+
+releases:
+  # - name: UI
+  #   namespace: server
+  #   chart: UI/RideSaver_UI
+  - name: LyftMock
+    namespace: mock
+    chart: LyftMock/RideSaver_Mock_Lyft
+  - name: LyftClient
+    namespace: client
+    chart: LyftClient/RideSaver_Client_Lyft
+  # - name: UberMock
+  #   namespace: mock
+  #   chart: Mock_Uber/RideSaver_Mock_Uber
+  - name: UberClient
+    namespace: client
+    chart: UberClient/RideSaver_Client_Uber
+helmfiles:
+  - path: git::https://github.com/RideSaver/RideSaver_API_Server.git@charts/helmfile.yaml?ref=RideSaver_API_Services-0.1.0
+    values:
+      - settings.yaml
+bases:
+  - settings.yaml
