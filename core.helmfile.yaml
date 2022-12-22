@@ -18,11 +18,11 @@ releases:
     namespace: core
     chart: hashicorp/vault
     disableValidation: true
-    hooks:
-      - events:
-          - postsync
-        command: sh
-        args: [-c, sleep 10 && ./vault_setup.sh]
+    # hooks:
+    #   - events:
+    #       - postsync
+    #     command: sh
+    #     args: [-c, sleep 10 && ./vault_setup.sh]
     # values:
     #   - server:
     #       ha:

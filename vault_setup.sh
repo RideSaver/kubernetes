@@ -36,7 +36,8 @@ done
 kubectl wait --for=jsonpath='{.status.phase}'=Running pod/vault-0 --namespace core
 
 RECOVERY_KEYS=`kubectl exec vault-0 --namespace core -- vault operator init -key-shares=3 -key-threshold=2 -format=json`
-echo $RECOVERY_KEYS
+
+echo $RECOVERY_KEYS &> ./.vault_keys.json
 
 KEY_COUNT=`echo $RECOVERY_KEYS | jq .unseal_threshold`
 
@@ -53,12 +54,17 @@ vault auth enable kubernetes
 vault write auth/kubernetes/config \
     kubernetes_host="https://\$KUBERNETES_PORT_443_TCP_ADDR:443"
 
+vault policy write core - << EOF
+path "sys*"                              { capabilities = ["create", "update", "patch", "read", "delete"] }
+path "auth/kubernetes*"                  { capabilities = ["create", "update", "patch", "read", "delete"] }
+path "pki*"                              { capabilities = ["create", "update", "patch", "read", "delete"] }
+EOF
+
 vault write auth/kubernetes/role/ridesaver-core-admin \
   bound_service_account_names=ridesaver-core-admin \
   bound_service_account_namespaces=core \
-  policies=root \
+  policies=core \
   ttl=20m
 exit
 EOL
 
-echo $RECOVERY_KEYS > ./.vault_keys.json
