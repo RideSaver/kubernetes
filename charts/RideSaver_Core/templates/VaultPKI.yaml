@@ -69,6 +69,7 @@ spec:
             vault write pki/roles/{{- .Release.Name -}} \
                 allowed_domains={{- join "," .Values.ca.urls -}} \
                 allow_subdomains=true \
+                require_cn=false \
                 max_ttl=72h
         env:
           - name: VAULT_ADDR
