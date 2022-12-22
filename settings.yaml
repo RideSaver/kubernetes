@@ -8,3 +8,8 @@ environments:
               paths:
                 - path: /
                   pathType: ImplementationSpecific
+        redis:
+          replicas: 1
+        vault_addr: vault.core
+        imagePullSecrets:
+          - ghcr-token

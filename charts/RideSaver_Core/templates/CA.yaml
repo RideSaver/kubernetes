@@ -2,14 +2,15 @@ apiVersion: cert-manager.io/v1
 kind: {{ .Values.ca.type }}
 metadata:
   name: {{ .Values.ca.name }}
+  namespace: default
 spec:
   {{ if eq (lower .Values.ca.from) "vault" }}
   vault:
-    path: pki_int/sign/{{ .Release.Name }}
-    server: https://{{ default "vault" .Values.vault_addr }}
+    path: pki/sign/{{ .Release.Name }}
+    server: http://{{ default "vault-internal.core" .Values.vault_addr }}:8200
     auth:
       kubernetes:
-        role: my-app-1
+        role: {{ include "RideSaver.serviceAccountName" . }}
         mountPath: /v1/auth/kubernetes
         secretRef:
           name: {{ include "RideSaver.serviceAccountName" . }}

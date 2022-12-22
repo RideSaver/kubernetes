@@ -9,6 +9,11 @@ ca:
   name: ridesaver-ca
   type: ClusterIssuer
   from: Vault
+  urls:
+    - client
+    - mock
+    - api
+    - server
 
 serviceAccount:
   # Specifies whether a service account should be created

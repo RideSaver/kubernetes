@@ -23,6 +23,7 @@ spec:
         helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     spec:
       restartPolicy: Never
+      serviceAccount: {{ include "RideSaver.serviceAccountName" . }}-admin
       containers:
       - name: post-install-job
         image: "hashicorp/vault:latest"
@@ -30,23 +31,48 @@ spec:
           - /bin/sh
           - -c
           - |
-            vault login -method kubernetes jwtToken=$TOKEN
+            export VAULT_TOKEN=$(vault write -field=token auth/kubernetes/login \
+              role={{ include "RideSaver.serviceAccountName" . }}-admin \
+              jwt=$TOKEN)
+
+            ATTEMPTS=10
+            n=0
+            until [ "$n" -ge $ATTEMPTS ]
+            do
+              echo "Attempt" $n...
+              vault status -format yaml | grep -E '^sealed: false' && break
+              n=$((n+1))
+              sleep 5
+            done
+
             vault secrets enable pki
+
+            vault policy write pki - << EOF
+            path "pki*"                        { capabilities = ["read", "list"] }
+            path "pki/sign/{{- .Release.Name -}}"    { capabilities = ["create", "update"] }
+            path "pki/issue/{{- .Release.Name -}}"   { capabilities = ["create"] }
+            EOF
+            vault write auth/kubernetes/role/{{ include "RideSaver.serviceAccountName" . }} \
+              bound_service_account_names={{ include "RideSaver.serviceAccountName" . }} \
+              bound_service_account_namespaces={{- .Release.Namespace -}} \
+              policies=pki \
+              ttl=20m
+
             vault write pki/root/generate/internal \
                 common_name=$url \
                 ttl=8760h
 
             vault write pki/config/urls \
-                issuing_certificates="http://vault.default:8200/v1/pki/{{- .Release.Name -}}" \
-                crl_distribution_points="http://vault.default:8200/v1/pki/crl"
+                issuing_certificates="http://vault.core:8200/v1/pki/{{- .Release.Name -}}" \
+                crl_distribution_points="http://vault.core:8200/v1/pki/crl"
 
-            vault write pki/roles/ride-saver \
-                allowed_domains={{- include "RideSaver.url" . -}},{{- .Release.Namespace -}} \
+            vault write pki/roles/{{- .Release.Name -}} \
+                allowed_domains={{- join "," .Values.ca.urls -}} \
                 allow_subdomains=true \
                 max_ttl=72h
         env:
           - name: VAULT_ADDR
-            value: {{- default "vault" .Values.vault_addr -}}
+            value: {{ default "http://vault:8200" .Values.vault_addr }}
           - name: TOKEN
             valueFrom:
               secretKeyRef:

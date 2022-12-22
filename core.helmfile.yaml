@@ -13,13 +13,20 @@ repositories:
   - name: jetstack
     url: https://charts.jetstack.io
 
-
-
 releases:
   - name: vault
     namespace: core
     chart: hashicorp/vault
     disableValidation: true
+    hooks:
+      - events:
+          - postsync
+        command: sh
+        args: [-c, sleep 10 && ./vault_setup.sh]
+    # values:
+    #   - server:
+    #       ha:
+    #         enabled: true
   - name: cert-manager
     namespace: core
     chart: jetstack/cert-manager
