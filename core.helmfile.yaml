@@ -18,11 +18,11 @@ releases:
     namespace: core
     chart: hashicorp/vault
     disableValidation: true
-    # hooks:
-    #   - events:
-    #       - postsync
-    #     command: sh
-    #     args: [-c, sleep 10 && ./vault_setup.sh]
+    hooks:
+      - events:
+          - postsync
+        command: sh
+        args: [-c, sleep 25 && ./vault_setup.sh]
     # values:
     #   - server:
     #       ha:
@@ -37,3 +37,12 @@ releases:
     namespace: core
     chart: nginx/ingress-nginx
     disableValidation: true
+  - name: ridesaver-core
+    namespace: core
+    chart: ./charts/RideSaver_Core
+    disableValidation: true
+    values:
+      - fullnameOverride: ridesaver-core
+    needs:
+      - core/vault
+      - core/cert-manager

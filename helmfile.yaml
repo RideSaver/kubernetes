@@ -18,11 +18,6 @@ repositories:
     url: https://charts.jetstack.io
 
 releases:
-  - name: ridesaver-core
-    namespace: core
-    chart: ./charts/RideSaver_Core
-    values:
-      - fullnameOverride: ridesaver-core
   # - name: UI
   #   namespace: server
   #   chart: UI/RideSaver_UI
@@ -37,19 +32,18 @@ releases:
     chart: UberMock/RideSaver_Mock_Uber
     values:
       - fullnameOverride: uber
-    needs:
-      - core/ridesaver-core
   - name: uber-client
     namespace: client
     chart: UberClient/RideSaver_Client_Uber
     values:
       - fullnameOverride: uber
-    needs:
-      - core/ridesaver-core
-# helmfiles:
-#   - path: git::https://github.com/RideSaver/RideSaver_API_Server.git@charts/helmfile.yaml?ref=v1.0.0
-#     values:
-#       - settings.yaml
-#       - namespace: api
-bases:
-  - settings.yaml
+helmfiles:
+  - path: git::https://github.com/RideSaver/RideSaver_API_Server.git@charts/helmfile.yaml?ref=main
+    values:
+      - settings.yaml
+      - namespace: api
+
+environments:
+  default:
+    values:
+      - settings.yaml

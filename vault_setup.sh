@@ -37,7 +37,8 @@ kubectl wait --for=jsonpath='{.status.phase}'=Running pod/vault-0 --namespace co
 
 RECOVERY_KEYS=`kubectl exec vault-0 --namespace core -- vault operator init -key-shares=3 -key-threshold=2 -format=json`
 
-echo $RECOVERY_KEYS &> ./.vault_keys.json
+echo $RECOVERY_KEYS
+echo $RECOVERY_KEYS | jq . > ./.vault_keys.json
 
 KEY_COUNT=`echo $RECOVERY_KEYS | jq .unseal_threshold`
 

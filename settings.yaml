@@ -1,15 +1,14 @@
-environments:
-  default:
-    values:
-      - ingress:
-          enabled: true
-          hosts:
-            - host: ride-saver.online
-              paths:
-                - path: /
-                  pathType: ImplementationSpecific
-        redis:
-          replicas: 1
-        vault_addr: vault.core
-        imagePullSecrets:
-          - ghcr-token
+ingress:
+  enabled: true
+  hosts:
+    - host: ride-saver.online
+      paths:
+        - path: /
+          pathType: Prefix
+redis:
+  replicas: 1
+vault_addr: vault.core
+imagePullSecrets:
+  - name: ghcr-token
+api:
+  root: api/v1
