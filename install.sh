@@ -5,4 +5,6 @@ kubectl create secret docker-registry ghcr-token --docker-username=$username --d
 
 helmfile apply -f ./core.helmfile.yaml
 
+sleep 20 # Wait for nginx-ingress to be *fully* ready, otherwise webhook gets wonky
+
 helmfile apply
