@@ -5,10 +5,22 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
+  tls:
+    - secretName: ingress-certificate
+      hosts:
+        - ride-saver.online
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-production
 redis:
   replicas: 1
+  storage:
+    class: stardard-rwo
 vault_addr: vault.core
 imagePullSecrets:
   - name: ghcr-token
 api:
   root: api/v1
+  auth:
+    url: http://10.112.2.41/authentication/validate-token

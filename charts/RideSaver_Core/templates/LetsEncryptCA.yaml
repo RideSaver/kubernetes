@@ -1,0 +1,162 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: {{ .Values.certificate.email }}
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    solvers:
+      - http01:
+          ingress:
+            name: web-ingress
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-production
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: {{ .Values.certificate.email }}
+    privateKeySecretRef:
+      name: letsencrypt-production
+    solvers:
+    - http01:
+        ingress:
+          name: web-ingress
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  creationTimestamp: '2022-12-24T12:07:40Z'
+  generation: 1
+  labels:
+    app.kubernetes.io/instance: ridesaver-services-api
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: RideSaver_API_Services
+    app.kubernetes.io/version: 0.2.92
+    helm.sh/chart: RideSaver_API_Services-0.1.1
+  managedFields:
+    - apiVersion: cert-manager.io/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:status:
+          f:conditions:
+            k:{"type":"Ready"}:
+              .: {}
+              f:lastTransitionTime: {}
+              f:message: {}
+              f:observedGeneration: {}
+              f:reason: {}
+              f:status: {}
+              f:type: {}
+      manager: cert-manager-certificates-readiness
+      operation: Update
+      subresource: status
+      time: '2022-12-24T12:07:40Z'
+    - apiVersion: cert-manager.io/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:status:
+          .: {}
+          f:conditions:
+            .: {}
+            k:{"type":"Issuing"}:
+              .: {}
+              f:observedGeneration: {}
+              f:type: {}
+      manager: cert-manager-certificates-trigger
+      operation: Update
+      subresource: status
+      time: '2022-12-24T12:07:40Z'
+    - apiVersion: cert-manager.io/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:labels:
+            .: {}
+            f:app.kubernetes.io/instance: {}
+            f:app.kubernetes.io/managed-by: {}
+            f:app.kubernetes.io/name: {}
+            f:app.kubernetes.io/version: {}
+            f:helm.sh/chart: {}
+          f:ownerReferences:
+            .: {}
+            k:{"uid":"180b1135-28cd-4162-a1ef-7bbe595217d9"}: {}
+        f:spec:
+          .: {}
+          f:dnsNames: {}
+          f:issuerRef:
+            .: {}
+            f:group: {}
+            f:kind: {}
+            f:name: {}
+          f:secretName: {}
+          f:usages: {}
+      manager: cert-manager-ingress-shim
+      operation: Update
+      time: '2022-12-24T12:07:40Z'
+    - apiVersion: cert-manager.io/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:status:
+          f:conditions:
+            k:{"type":"Issuing"}:
+              f:lastTransitionTime: {}
+              f:message: {}
+              f:reason: {}
+              f:status: {}
+          f:failedIssuanceAttempts: {}
+          f:lastFailureTime: {}
+      manager: cert-manager-certificates-issuing
+      operation: Update
+      subresource: status
+      time: '2022-12-27T09:05:28Z'
+  name: ingress-certificate
+  namespace: api
+  ownerReferences:
+    - apiVersion: networking.k8s.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Ingress
+      name: services
+      uid: 180b1135-28cd-4162-a1ef-7bbe595217d9
+  resourceVersion: '13035097'
+  uid: 1545a3c4-71ab-4b37-a140-f63cd7fd29ff
+  selfLink: /apis/cert-manager.io/v1/namespaces/api/certificates/ingress-certificate
+status:
+  conditions:
+    - lastTransitionTime: '2022-12-27T09:05:28Z'
+      message: >-
+        The certificate request has failed to complete and will be retried:
+        Failed to wait for order resource "ingress-certificate-m2jll-4166976357"
+        to become ready: order is in "errored" state: Failed to create Order:
+        400 urn:ietf:params:acme:error:rejectedIdentifier: Error creating new
+        order :: Cannot issue for "ride-saver.local": Domain name does not end
+        with a valid public suffix (TLD)
+      observedGeneration: 1
+      reason: Failed
+      status: 'False'
+      type: Issuing
+    - lastTransitionTime: '2022-12-24T12:07:40Z'
+      message: Issuing certificate as Secret does not exist
+      observedGeneration: 1
+      reason: DoesNotExist
+      status: 'False'
+      type: Ready
+  failedIssuanceAttempts: 1
+  lastFailureTime: '2022-12-27T09:05:28Z'
+spec:
+  dnsNames:
+    - ride-saver.local
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-production
+  secretName: ingress-certificate
+  usages:
+    - digital signature
+    - key encipherment
